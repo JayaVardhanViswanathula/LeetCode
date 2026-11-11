@@ -1,31 +1,29 @@
-
 class Solution {
     public String processStr(String s) {
 
-        StringBuilder result = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
         for (char ch : s.toCharArray()) {
 
             if (ch >= 'a' && ch <= 'z') {
-                result.append(ch);
+                sb.append(ch);
             }
 
             else if (ch == '*') {
-                if (result.length() > 0) {
-                    result.deleteCharAt(result.length() - 1);
+                if (sb.length() > 0) {
+                    sb.deleteCharAt(sb.length() - 1);
                 }
             }
 
             else if (ch == '#') {
-                String temp = result.toString();
-                result.append(temp);
+                sb.append(sb);
             }
 
             else if (ch == '%') {
-                result.reverse();
+                sb.reverse();
             }
         }
 
-        return result.toString();
+        return sb.toString();
     }
 }
