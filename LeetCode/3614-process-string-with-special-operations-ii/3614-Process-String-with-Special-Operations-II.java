@@ -1,60 +1,55 @@
-
 class Solution {
     public char processStr(String s, long k) {
-
         int n = s.length();
-        long[] len = new long[n + 1];
+        long[] len = new long[n];
 
-        // Step 1: Calculate length after each operation
+        long curr = 0;
+
+        // Step 1: Calculate string length after each operation
         for (int i = 0; i < n; i++) {
-
             char ch = s.charAt(i);
 
             if (ch >= 'a' && ch <= 'z') {
-                len[i + 1] = len[i] + 1;
-            }
+                curr++;
+            } 
             else if (ch == '*') {
-                len[i + 1] = Math.max(0, len[i] - 1);
-            }
+                curr = Math.max(0, curr - 1);
+            } 
             else if (ch == '#') {
-                len[i + 1] = len[i] * 2;
+                curr *= 2;
             }
-            else if (ch == '%') {
-                len[i + 1] = len[i];
-            }
+
+            len[i] = curr;
         }
 
         // Step 2: Check whether k is valid
-        if (k >= len[n]) {
+        if (k >= curr) {
             return '.';
         }
 
         // Step 3: Traverse backwards
         for (int i = n - 1; i >= 0; i--) {
-
             char ch = s.charAt(i);
 
-            if (ch >= 'a' && ch <= 'z') {
+            if (ch == '*') {
+                curr = (i == 0) ? 0 : len[i - 1];
+            } 
+            else if (ch == '#') {
+                curr /= 2;
 
-                if (k == len[i]) {
+                if (curr > 0) {
+                    k %= curr;
+                }
+            } 
+            else if (ch == '%') {
+                k = curr - 1 - k;
+            } 
+            else {
+                if (k == curr - 1) {
                     return ch;
                 }
-            }
 
-            else if (ch == '*') {
-                // Deleted last character
-                // Position remains unchanged
-            }
-
-            else if (ch == '#') {
-
-                if (k >= len[i]) {
-                    k -= len[i];
-                }
-            }
-
-            else if (ch == '%') {
-                k = len[i] - 1 - k;
+                curr--;
             }
         }
 
